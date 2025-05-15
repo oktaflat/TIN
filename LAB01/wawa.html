@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przykład Struktury Strony</title>
+    <style>
+        /* Globalne style */
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            background: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+        /* Lewa kolumna nawigacyjna */
+        .nav {
+            width: 250px;
+            background: rgba(41, 128, 185, 0.7);
+            padding: 20px;
+            position: relative;
+        }
+        .nav .sticky-logo {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .nav a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 5px;
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .nav a:hover {
+            background: rgba(41, 128, 185, 0.9);
+        }
+        /* Prawa kolumna z treścią */
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        /* Przykładowa tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Lewa kolumna nawigacyjna -->
+    <nav class="nav">
+        <div class="sticky-logo">LOGO</div>
+        <a href="#">Link główny 1</a>
+        <a href="#">Link główny 2</a>
+        <a href="#">Link główny 3</a>
+    </nav>
+    <!-- Prawa kolumna z treścią -->
+    <div class="content">
+        <h1>Tytuł Strony</h1>
+        <p>Przykładowa treść umieszczona w prawej kolumnie.</p>
+        <table>
+            <thead>
+            <tr>
+                <th>Kolumna 1</th>
+                <th>Kolumna 2</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Dane 1</td>
+                <td>Dane 2</td>
+            </tr>
+            <tr>
+                <td>Dane 3</td>
+                <td>Dane 4</td>
+            </tr>
+            </tbody>
+        </table>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+        Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+            Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+            Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+            Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+            Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+            Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+            Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+            Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+            Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+
+    </div>
+</div>
+</body>
+</html>

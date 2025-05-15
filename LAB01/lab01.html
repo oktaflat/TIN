@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /* Globalne style */
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            color: rgb(28, 5, 5);
+            display: flex;
+            justify-content: center;
+            background: #dcd7d6;
+        }
+        .container {
+            display: flex;
+            width: 90%;
+            height: 100vh;
+            max-width: 1200px;
+            background: #f4f2f0;
+        }
+        /* Lewa Kolumna Nawigacyjna */
+        .nav {
+            flex-shrink: 0;
+            width: 120px;
+            background: rgba(184, 71, 29, 0.91);
+            position: relative;
+        }
+        .nav img{
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        .dropdown{
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        .dropdown a {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: rgb(147, 54, 38);
+            color: #f4f2f0;
+            padding: 12px;
+            transition: background 0.3s;
+        }
+        .dropdown a:hover {
+            background: rgb(124, 43, 29);
+        }
+        .dropdown-content {
+            display: none;
+            width: 100%;
+            position: absolute;
+        }
+        .dropdown:hover .dropdown-content{
+            display: block;
+        }
+        .dropdown-content a {
+            background: rgb(117, 39, 25);
+        }
+        /* Prawa kolumna z treścią */
+        .content {
+            overflow-y: scroll;
+        }
+        .content-title {
+            align-content: center;
+            padding: 0;
+            margin-top: 0;
+            height: 120px;
+            background: rgba(218,127,51,0.86);
+        }
+        .content-title h1 {
+            margin-left: 1em;
+            color: rgb(81, 20, 20);
+        }
+        .content-columns {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 12px 12px;
+            padding: 12px;
+        }
+        .box * {
+            margin-bottom: 12px;
+        }
+        .box hr {
+            border: solid 1px rgb(147, 54, 38);
+        }
+        .box ol {
+            padding-left: 0;
+            list-style: inside decimal;
+        }
+        .table-box {
+            grid-column: span 2;
+        }
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+        }
+        table tr {
+            border-bottom: solid 1px rgba(218,127,51);
+        }
+        thead {
+            background: rgba(218,127,51);
+        }
+        th, td {
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background: rgb(246, 223, 197);
+        }
+        .button-box {
+            display: flex;
+            justify-content: space-around;
+            grid-column: span 2;
+        }
+        .button-box button {
+            flex: 1;
+            background: rgb(218, 127, 51);
+            color: #f4f2f0;
+            border: 0;
+            border-radius: 4px;
+            margin-right: 4px;
+            padding: 12px;
+            width: 200px;
+            transition: background 0.3s;
+        }
+        .button-box button:hover {
+            background: rgb(184, 71, 29);
+        }
+        .footer {
+            background: rgb(92, 37, 28);
+            color: #e3c5b0;
+            display: grid;
+            grid-template-columns: auto auto auto;
+        }
+        .footer-column {
+            padding: 18px;
+        }
+        .footer-credit {
+            grid-column: span 3;
+        }
+        .footer-credit hr {
+            width: 80%;
+            border: solid 1px rgb(147, 54, 38);
+        }
+        .footer-credit p {
+            text-align: center;
+            color: rgb(177, 91, 64);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="nav">
+        <img src="https://static.wikia.nocookie.net/projectsekai/images/d/d7/Vivid_BAD_SQUAD_SEKAI_ALBUM_Vol.3.jpg">
+        <div class="dropdown">
+            <a href="#">link</a>
+            <div class="dropdown-content">
+                <a href="#">link</a>
+                <a href="#">link</a>
+                <a href="#">link</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="#">link 2</a>
+            <div class="dropdown-content">
+                <a href="#">link</a>
+                <a href="#">link</a>
+                <a href="#">link</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a href="#">link 3</a>
+            <div class="dropdown-content">
+                <a href="#">link</a>
+                <a href="#">link</a>
+                <a href="#">link</a>
+            </div>
+        </div>
+    </nav>
+    <div class="content">
+        <div class="content-title">
+            <h1>title 1</h1>
+        </div>
+        <div class="content-columns">
+            <div class="box">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+                    Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+            </div>
+            <div class="box">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+                    Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+            </div>
+            <div class="box">
+                <h2>subtitle</h2>
+                <hr>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+                    Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+            </div>
+            <div class="box">
+                <h2>subtitle</h2>
+                <hr>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Curabitur scelerisque et neque et iaculis. Nam a laoreet neque.
+                    Vestibulum libero augue, sagittis nec purus non, eleifend lacinia augue.</p>
+            </div>
+            <div class="box">
+                <h2>subtitle</h2>
+                <hr>
+                <p>lorem ipsum</p>
+            </div>
+            <div class="box">
+                <h2>subtitle</h2>
+                <hr>
+                <ol>
+                    <li>Item</li>
+                    <li>Item</li>
+                    <li>Item</li>
+                </ol>
+            </div>
+            <div class="table-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>col1</th>
+                            <th>col2</th>
+                            <th>col3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="button-box">
+                <button>sample text 1</button>
+                <button>sample text 2</button>
+                <button>sample text 3</button>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-column">
+                <h3>Kolumna 1</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in ligula nisl. Praesent tempor turpis vel odio placerat varius. <br>
+                    Suspendisse nec sagittis massa, nec iaculis mi. Phasellus at sem vehicula, porttitor velit eget, pellentesque augue.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Kolumna 2</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in ligula nisl. Praesent tempor turpis vel odio placerat varius. <br>
+                    Suspendisse nec sagittis massa, nec iaculis mi. Phasellus at sem vehicula, porttitor velit eget, pellentesque augue.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Kolumna 3</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in ligula nisl. Praesent tempor turpis vel odio placerat varius. <br>
+                    Suspendisse nec sagittis massa, nec iaculis mi. Phasellus at sem vehicula, porttitor velit eget, pellentesque augue.</p>
+            </div>
+            <div class="footer-credit">
+                <hr>
+                <p>Nowoczesny uklad strony</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

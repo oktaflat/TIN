@@ -1,0 +1,250 @@
+@use "sass:map";
+@use "sass:color";
+@use "sass:math";
+@use "sass:list";
+// Zmienne i mapy
+$colors: (
+  primary: #3498DB,
+  secondary: #2FCC71,
+  accent: #E74B3C,
+  dark: #343A40,
+  light: #F8F9FA
+);
+$spacings: (s: 0.5rem, m: 1rem, l: 2rem);
+$breakpoints: (sm: 576px, md: 768px, lg:992px);
+$radius: 6px;
+$transition: 0.3s;
+// Funkcje
+@function color($key) {
+  @return map.get($colors, $key);
+}
+@function spacing($key) {
+  @return map.get($spacings, $key);
+}
+// Mixiny
+@mixin flex($direction: row, $align-items: center) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: $align-items;
+  flex-wrap: wrap;
+}
+@mixin hover-effect($property, $value) {
+  transition: $property $transition;
+  &:hover { #{$property}: $value; }
+}
+@mixin active-effect($property, $value) {
+  transition: none;
+  &:active { #{$property}: $value; }
+}
+@mixin responsive($breakpoint) {
+  @media (max-width: map.get($breakpoints, $breakpoint)) { @content;}
+}
+@mixin accent-button($spacing-size) {
+  border: none;
+  border-radius: $radius;
+  background: color(accent);
+  color: color(light);
+  font-weight: bold;
+  padding: spacing($spacing-size);
+  cursor: pointer;
+  @include hover-effect(background, darken(color(accent), 15));
+  @include active-effect(background, color(accent));
+}
+// Podstawowe style
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: color(dark);
+  background: color(light);
+  @include responsive(lg) { font-size: 15px; }
+}
+// Header
+header {
+  @include flex;
+  width: auto;
+  height: fit-content;
+  padding: spacing(l);
+  font-weight: bold;
+
+  .logo p {
+    font-size: 1.5rem;
+
+    .logo-tech {
+      color: color(primary);
+    }
+
+    .logo-wave {
+      color: color(secondary);
+    }
+  }
+
+  nav {
+    margin-left: auto;
+    position: relative;
+    display: inline-block;
+
+    button {
+      display: none;
+      border: none;
+      background: none;
+      font-size: 20px;
+      @include responsive(sm) {
+        display: block;
+      }
+
+      @include hover-effect(color, color(accent));
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    @include active-effect(color, color(dark));
+
+    .nav-links {
+      @include responsive(sm) {
+        display: none;
+        position: absolute;
+        right: 0;
+        background: color(accent);
+        width: 90vw;
+        z-index: 1;
+      }
+    }
+
+    &:hover .nav-links {
+      @include responsive(sm) { display: block; }
+    }
+
+    .nav-links ul {
+      @include flex;
+      list-style-type: none;
+      gap: spacing(m);
+
+      a {
+        text-decoration: none;
+        color: color(dark);
+        @include hover-effect(color, color(accent));
+      }
+
+      @include responsive(sm) {
+        flex-direction: column;
+        padding: spacing(m);
+        a {
+          color: color(light);
+          @include hover-effect(color, color(dark));
+        }
+      }
+    }
+  }
+}
+// Content
+.content {
+  .banner {
+    @include flex(column);
+    height:350px;
+    justify-content: center;
+    gap: spacing(m);
+    background: linear-gradient(to right, color(primary), color(secondary));
+    color: color(light);
+    text-align: center;
+
+    h1, p { max-width: 80vw; }
+    button { @include accent-button(m); }
+  }
+
+  .presentation {
+    @include flex(column);
+    justify-content: center;
+    padding: spacing(l);
+
+    .box-container {
+      @include flex;
+      justify-content: center;
+      width: auto;
+      margin: spacing(l);
+      gap: spacing(m);
+
+      @include responsive(sm) { flex-direction: column; }
+
+      .box {
+        gap: spacing(s);
+        padding: spacing(m);
+        width: 25vw;
+        max-width: 300px;
+        min-height: 240px;
+        height: fit-content;
+        border-radius: $radius;
+        background: color(light);
+        box-shadow: 0 0 6px lighten(color(dark), 55);
+        text-align: center;
+        @include hover-effect(transform, translateY(-8px));
+
+        @include responsive(md) { width: 400px; }
+
+        * { margin: spacing(s); }
+
+        @for $i from 1 through 3 {
+          .box-h3-#{$i} {
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            display: inline-block;
+            color: color(light);
+            background: nth(map-values($colors), $i);
+          }
+        }
+      }
+    }
+  }
+}
+footer {
+  background: color(dark);
+  color: color(light);
+  box-shadow: 0 0 12px lighten(color(dark), 50);
+  padding: spacing(l);
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: spacing(m);
+    padding: spacing(l);
+
+    @include responsive(sm) { display: block; }
+
+    .contact-info {
+      @include flex(column, normal);
+      justify-content: center;
+      height: 250px;
+    }
+
+    .footer-form {
+      @extend .contact-info;
+
+      form {
+        @include flex(column, normal);
+        gap: spacing(s);
+        input, textarea {
+          border: none;
+          line-height: 2rem;
+          border-radius: $radius;
+        }
+        #submit { @include accent-button(s); }
+      }
+    }
+  }
+
+  .credit {
+    margin-top: spacing(m);
+    border-top: 1px solid lighten(color(dark), 10);
+    text-align: center;
+    padding: spacing(l);
+  }
+}
