@@ -1,0 +1,56 @@
+@import "basics";
+
+// Start Menu
+.difficulty-heading {
+  font-size: 28px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: spacing(m);
+}
+#difficulty-selector {
+  border-top: 1px dashed color(accent);
+  padding: spacing(m);
+  width: fit-content;
+  gap: spacing(s);
+  @include flex;
+
+  .difficulty-button {
+    position: relative;
+    width: 200px;
+    overflow: hidden;
+
+    .button-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      white-space: nowrap;
+
+      animation: backgroundText 6s linear infinite;
+
+      span {
+        line-height: 1;
+        font-size: 48px;
+        font-style: normal;
+        font-weight: normal;
+        color: color(lighter-accent);
+      }
+    }
+
+    .button-text {
+      position: relative;
+      width: fit-content;
+      font-size: 24px;
+      font-weight: bolder;
+      font-style: italic;
+      color: color(dark);
+    }
+  }
+}
+
+.difficulty-button:hover {
+  .button-background {
+    span {
+      color: lighten(color(lighter-accent), 10);
+    }
+  }
+}

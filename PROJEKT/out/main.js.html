@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: main.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: main.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { generateStartMenu } from "./modules/startMenu.js";
+import {
+  TILE_STATUS,
+  Tile,
+  generateTiles,
+  markTile,
+  revealTile,
+  revealAllTiles,
+  checkWin,
+  checkLose,
+  renderGame,
+} from "./modules/game.js";
+import { deletePauseMenu, generatePauseMenu } from "./modules/pauseMenu.js";
+import { Timer } from "./modules/stopWatch.js";
+import { getRanking, addRanking } from "./modules/ranking.js";
+
+const GAME_DIFFICULTY = {
+  EASY: "EASY",
+  MEDIUM: "MEDIUM",
+  HARD: "HARD",
+};
+
+let mode;
+const stopwatch = new Timer();
+let stopwatchInterval;
+
+//////////////////
+// DOM ELEMENTS //
+//////////////////
+
+const container = document.getElementById("main-container");
+
+const gameContainer = document.createElement("div");
+gameContainer.id = "game-container";
+
+// counters //
+
+const counterDisplay = document.createElement("div");
+counterDisplay.className = "game-counter";
+counterDisplay.id = "game-counter";
+
+const flagCounter = document.createElement("div");
+flagCounter.className = "counter";
+flagCounter.id = "counter-flag";
+flagCounter.textContent = "FLAGS:";
+const flagCounterText = document.createElement("p");
+flagCounterText.className = "counter-text";
+flagCounterText.id = "counter-flag-text";
+
+const timer = document.createElement("div");
+timer.className = "counter";
+timer.id = "counter-timer";
+timer.textContent = "TIME:";
+const timerText = document.createElement("p");
+timerText.className = "counter-text";
+timerText.id = "counter-timer-text";
+timerText.textContent = "0:00";
+
+// pause menu //
+
+const pauseButton = document.createElement("button");
+pauseButton.className = "pause-button";
+pauseButton.textContent = "||";
+
+////////////////////////
+// HANDLER MANAGEMENT //
+////////////////////////
+
+const elementHandlers = [];
+const pauseMenuHandlers = [];
+/**
+ * Cleans an element handler array.
+ * @param {any[]} handlersArray - array, default is elementHandlers
+ */
+function cleanElementHandlers(handlersArray = elementHandlers) {
+  handlersArray.forEach((item) => {
+    item.element.removeEventListener(item.handlerType, item.handler);
+  });
+  handlersArray.length = 0;
+}
+
+/**
+ * Preps website before rendering
+ * @param {string} newMode - mode that the website is switching to
+ */
+function modeSwitch(newMode) {
+  switch (mode) {
+    case "startMenu":
+      cleanElementHandlers();
+      break;
+    case "game":
+      cleanElementHandlers();
+      break;
+  }
+  container.replaceChildren();
+  gameContainer.replaceChildren();
+  mode = newMode;
+}
+
+/**
+ * Handler for stopping propagation
+ * @param {Event} e - event
+ */
+const stopProp = function (e) {
+  e.stopPropagation();
+};
+
+/////////////////////
+// TIMER FUNCTIONS //
+/////////////////////
+
+/**
+ * Starts timer
+ */
+function startTimer() {
+  stopwatch.start();
+  stopwatchInterval ??= setInterval(measureTime, 100);
+}
+
+/**
+ * Pauses timer
+ */
+function pauseTimer() {
+  stopwatch.pause();
+  clearInterval(stopwatchInterval);
+  stopwatchInterval = null;
+}
+
+/**
+ * Unpauses timer
+ */
+function unpauseTimer() {
+  stopwatch.unpause();
+  stopwatchInterval ??= setInterval(measureTime, 100);
+}
+
+/**
+ * During gameplay, changes timerText to the current measured time
+ */
+function measureTime() {
+  timerText.textContent = convertTime(stopwatch.getTime());
+}
+
+/**
+ * Function takes time in millis and converts it into mm:ss format
+ * @param {number} timeInMillis - time in millis
+ * @returns {string} - time in mm:ss format
+ */
+function convertTime(timeInMillis) {
+  const timeInSeconds = Math.floor(Math.round(timeInMillis / 1000));
+  let minutes = Math.floor(timeInSeconds / 60);
+  let seconds = timeInSeconds - minutes * 60;
+  let secondsText;
+  if (seconds === 0) {
+    secondsText = "00";
+  } else if (seconds &lt; 10) {
+    secondsText = "0" + seconds.toString();
+  } else {
+    secondsText = seconds.toString();
+  }
+  return minutes.toString() + ":" + secondsText;
+}
+
+////////////////////
+// MODE SWITCHING //
+////////////////////
+
+/**
+ * Renders and adds functionality to startMenu
+ */
+function switchToStart() {
+  modeSwitch("startMenu");
+  generateStartMenu(container);
+
+  // button handlers //
+  const easyDiffHandler = function () {
+    switchToGame(GAME_DIFFICULTY.EASY);
+  };
+  const mediumDiffHandler = function () {
+    switchToGame(GAME_DIFFICULTY.MEDIUM);
+  };
+  const hardDiffHandler = function () {
+    switchToGame(GAME_DIFFICULTY.HARD);
+  };
+
+  // button listeners //
+  const easyButton = document.getElementById("easy-diff");
+  easyButton.addEventListener("click", easyDiffHandler);
+  elementHandlers.push({
+    element: easyButton,
+    handlerType: "click",
+    handler: easyDiffHandler,
+  });
+  const mediumButton = document.getElementById("medium-diff");
+  mediumButton.addEventListener("click", mediumDiffHandler);
+  elementHandlers.push({
+    element: mediumButton,
+    handlerType: "click",
+    handler: mediumDiffHandler,
+  });
+  const hardButton = document.getElementById("hard-diff");
+  hardButton.addEventListener("click", hardDiffHandler);
+  elementHandlers.push({
+    element: hardButton,
+    handlerType: "click",
+    handler: hardDiffHandler,
+  });
+}
+
+/**
+ * Creates and then renders board, adding functionality to each tile
+ * @param {GAME_DIFFICULTY} difficulty - game difficulty
+ */
+function switchToGame(difficulty) {
+  modeSwitch("game");
+  stopwatch.reset();
+  timerText.textContent = "0:00";
+
+  // SETUP //
+  let gameBoard;
+  let numberOfMines;
+  let gameRunning = false;
+  switch (difficulty) {
+    case GAME_DIFFICULTY.EASY:
+      numberOfMines = 10;
+      gameBoard = generateTiles(9, 9, numberOfMines);
+      break;
+    case GAME_DIFFICULTY.MEDIUM:
+      numberOfMines = 40;
+      gameBoard = generateTiles(16, 16, numberOfMines);
+      break;
+    case GAME_DIFFICULTY.HARD:
+      numberOfMines = 99;
+      gameBoard = generateTiles(30, 16, numberOfMines);
+      break;
+  }
+
+  /// COUNTERS ///
+
+  container.appendChild(gameContainer);
+
+  // render counters &amp; pause button //
+  gameContainer.appendChild(counterDisplay);
+
+  counterDisplay.appendChild(flagCounter);
+  flagCounter.appendChild(flagCounterText);
+  flagCounterText.textContent = numberOfMines;
+
+  counterDisplay.appendChild(timer);
+  timer.appendChild(timerText);
+
+  counterDisplay.appendChild(pauseButton);
+  const pauseHandler = function () {
+    pauseMenu(difficulty);
+  };
+  pauseButton.addEventListener("click", pauseHandler);
+  elementHandlers.push({
+    element: pauseButton,
+    handlerType: "click",
+    handler: pauseHandler,
+  });
+
+  /// BOARD ///
+
+  // render board //
+  renderGame(gameBoard, gameContainer);
+
+  // tile listeners //
+  gameBoard.forEach((row) => {
+    row.forEach((tile) => {
+      const leftClickHandler = function () {
+        if (gameRunning === false) {
+          gameRunning = true;
+          startTimer();
+        }
+        revealTile(gameBoard, tile);
+        finishGame(gameBoard, difficulty);
+      };
+      const rightClickHandler = function (e) {
+        e.preventDefault();
+        markTile(tile);
+        minesLeftCount(gameBoard, numberOfMines);
+        if (gameRunning === false) {
+          gameRunning = true;
+          startTimer();
+        }
+      };
+
+      tile.element.addEventListener("click", leftClickHandler);
+      tile.element.addEventListener("contextmenu", rightClickHandler);
+      elementHandlers.push({
+        element: tile.element,
+        handlerType: "click",
+        handler: leftClickHandler,
+      });
+      elementHandlers.push({
+        element: tile.element,
+        handlerType: "contextmenu",
+        handler: rightClickHandler,
+      });
+    });
+  });
+}
+
+/**
+ * Checks how many tiles are flagged and accordingly changes flagCounterText
+ * @param {any[]} gameBoard - array of Tile objects
+ * @param {number} numberOfMines - number of mines that are on the board
+ */
+function minesLeftCount(gameBoard, numberOfMines) {
+  const flaggedTilesCount = gameBoard.reduce((count, row) => {
+    let flaggedInRow = row.filter(
+      (tile) => tile.status === TILE_STATUS.FLAGGED,
+    );
+    return count + flaggedInRow.length;
+  }, 0);
+  flagCounterText.textContent = (numberOfMines - flaggedTilesCount).toString();
+}
+
+/**
+ * Checks if the game has been won or lost and acts accordingly
+ * @param {any[]} gameBoard - array of Tile objects
+ * @param {GAME_DIFFICULTY} difficulty - game difficulty
+ */
+function finishGame(gameBoard, difficulty) {
+  const gameWon = checkWin(gameBoard);
+  const gameLost = checkLose(gameBoard);
+  if (gameWon || gameLost) {
+    cleanElementHandlers();
+    pauseTimer();
+  }
+  if (gameWon) {
+    console.log("Game won!");
+    renderGameOver(true, difficulty);
+    addRanking(stopwatch.getTime(), difficulty);
+    console.log(getRanking(difficulty));
+    renderRanking(difficulty);
+  }
+  if (gameLost) {
+    console.log("Game lost!");
+    revealAllTiles(gameBoard);
+    renderGameOver(false, difficulty);
+  }
+}
+
+/**
+ * Renders "Game won!"/"Game lost!" screen
+ * @param {boolean} victory -  true if game was won, false if game was lost
+ * @param {GAME_DIFFICULTY} difficulty - game difficulty
+ */
+function renderGameOver(victory, difficulty) {
+  const gameOver = document.createElement("div");
+  gameOver.id = "game-over";
+  const gameOverText = document.createElement("h2");
+  gameOverText.id = "game-over-heading";
+
+  const gameOverButtons = document.createElement("div");
+  gameOverButtons.id = "game-over-options";
+  const restartButton = document.createElement("button");
+  restartButton.className = "game-over-button";
+  restartButton.id = "game-over-restart";
+  restartButton.textContent = "RESTART";
+  const quitButton = document.createElement("button");
+  quitButton.className = "game-over-button";
+  quitButton.id = "game-over-quit";
+  quitButton.textContent = "QUIT";
+
+  if (victory) {
+    gameOverText.textContent = "GAME WON!";
+  } else {
+    gameOverText.textContent = "GAME LOST!";
+    restartButton.textContent = "TRY AGAIN";
+  }
+
+  container.appendChild(gameOver);
+  gameOver.appendChild(gameOverText);
+  gameOver.appendChild(gameOverButtons);
+  gameOverButtons.appendChild(restartButton);
+  gameOverButtons.appendChild(quitButton);
+
+  // handlers //
+  const destroyGameOver = function () {
+    gameOver.replaceChildren();
+    gameOver.remove();
+    cleanElementHandlers();
+    gameContainer.removeEventListener("click", stopProp, { capture: true });
+    gameContainer.removeEventListener("contextmenu", stopProp, {
+      capture: true,
+    });
+  };
+
+  const restartHandler = function () {
+    destroyGameOver();
+    switchToGame(difficulty);
+  };
+  const quitHandler = function () {
+    destroyGameOver();
+    switchToStart();
+  };
+
+  // listeners //
+  gameContainer.addEventListener("click", stopProp, { capture: true });
+  gameContainer.addEventListener("contextmenu", stopProp, { capture: true });
+
+  restartButton.addEventListener("click", restartHandler);
+  quitButton.addEventListener("click", quitHandler);
+  elementHandlers.push({
+    element: restartButton,
+    handlerType: "click",
+    handler: restartHandler,
+  });
+  elementHandlers.push({
+    element: quitButton,
+    handlerType: "click",
+    handler: quitHandler,
+  });
+}
+
+// PAUSE MENU //
+
+/**
+ * Pauses game and renders pause menu
+ * @param {GAME_DIFFICULTY} difficulty - game difficulty
+ */
+function pauseMenu(difficulty) {
+  // div pops up over board
+  // pauses timer
+  // when deleted unpauses timer
+  pauseTimer();
+  generatePauseMenu(container);
+
+  // handlers //
+  const continueHandler = function () {
+    destroyPauseMenu();
+  };
+  const resetHandler = function () {
+    destroyPauseMenu();
+    switchToGame(difficulty);
+  };
+  const quitHandler = function () {
+    destroyPauseMenu();
+    switchToStart();
+  };
+
+  // listeners //
+  gameContainer.addEventListener("click", stopProp, { capture: true });
+  gameContainer.addEventListener("contextmenu", stopProp, { capture: true });
+
+  console.log("Paused");
+
+  const continueButton = document.getElementById("pause-continue");
+  const resetButton = document.getElementById("pause-reset");
+  const quitButton = document.getElementById("pause-quit");
+
+  continueButton.addEventListener("click", continueHandler);
+  resetButton.addEventListener("click", resetHandler);
+  quitButton.addEventListener("click", quitHandler);
+
+  pauseMenuHandlers.push({
+    element: continueButton,
+    handlerType: "click",
+    handler: continueHandler,
+  });
+  pauseMenuHandlers.push({
+    element: resetButton,
+    handlerType: "click",
+    handler: resetHandler,
+  });
+  pauseMenuHandlers.push({
+    element: continueButton,
+    handlerType: "click",
+    handler: quitHandler,
+  });
+}
+
+/**
+ * Deletes pause menu and cleans pauseMenuHandlers array
+ */
+function destroyPauseMenu() {
+  unpauseTimer();
+  cleanElementHandlers(pauseMenuHandlers);
+  gameContainer.removeEventListener("click", stopProp, { capture: true });
+  gameContainer.removeEventListener("contextmenu", stopProp, { capture: true });
+  deletePauseMenu();
+  console.log("Unpaused");
+}
+
+/////////////
+// RANKING //
+/////////////
+
+/**
+ * Adds functionality to ranking buttons
+ */
+function displayRanking() {
+  const easyRankingButton = document.getElementById("ranking-easy");
+  const mediumRankingButton = document.getElementById("ranking-medium");
+  const hardRankingButton = document.getElementById("ranking-hard");
+
+  // handlers
+  const easyRankingSwitch = function () {
+    renderRanking(GAME_DIFFICULTY.EASY);
+  };
+  const mediumRankingSwitch = function () {
+    renderRanking(GAME_DIFFICULTY.MEDIUM);
+  };
+  const hardRankingSwitch = function () {
+    renderRanking(GAME_DIFFICULTY.HARD);
+  };
+
+  // listeners
+  easyRankingButton.addEventListener("click", easyRankingSwitch);
+  mediumRankingButton.addEventListener("click", mediumRankingSwitch);
+  hardRankingButton.addEventListener("click", hardRankingSwitch);
+
+  easyRankingButton.click();
+}
+
+/**
+ * Renders ranking for given difficulty
+ * @param {string} difficulty - game difficulty
+ */
+function renderRanking(difficulty) {
+  const tableCaption = document.getElementById("ranking-caption");
+  tableCaption.textContent = difficulty;
+  const tableBody = document.getElementById("ranking-table-body");
+  tableBody.innerHTML = "";
+
+  if (getRanking(difficulty).length === 0) {
+    tableBody.innerHTML +=
+      "&lt;tr>" + "&lt;td>No times yet&lt;/td>" + "&lt;td>&lt;/td>" + "&lt;/tr>";
+    return;
+  }
+  const ranking = getRanking(difficulty);
+  for (let i = 0; i &lt; ranking.length; i++) {
+    tableBody.innerHTML +=
+      "&lt;tr>" +
+      "&lt;td>" +
+      (i + 1) +
+      ".&lt;/td>" +
+      "&lt;td>" +
+      convertTime(ranking[i]) +
+      "&lt;/td>" +
+      "&lt;/tr>";
+  }
+}
+
+/////////////
+// STARTUP //
+/////////////
+
+mode = "startMenu";
+switchToStart();
+displayRanking();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-game.html">game</a></li><li><a href="module-pauseMenu.html">pauseMenu</a></li><li><a href="module-ranking.html">ranking</a></li><li><a href="module-startMenu.html">startMenu</a></li><li><a href="module-stopwatch.html">stopwatch</a></li></ul><h3>Global</h3><ul><li><a href="global.html#cleanElementHandlers">cleanElementHandlers</a></li><li><a href="global.html#convertTime">convertTime</a></li><li><a href="global.html#destroyPauseMenu">destroyPauseMenu</a></li><li><a href="global.html#displayRanking">displayRanking</a></li><li><a href="global.html#finishGame">finishGame</a></li><li><a href="global.html#measureTime">measureTime</a></li><li><a href="global.html#minesLeftCount">minesLeftCount</a></li><li><a href="global.html#modeSwitch">modeSwitch</a></li><li><a href="global.html#pauseMenu">pauseMenu</a></li><li><a href="global.html#pauseTimer">pauseTimer</a></li><li><a href="global.html#renderGameOver">renderGameOver</a></li><li><a href="global.html#renderRanking">renderRanking</a></li><li><a href="global.html#startTimer">startTimer</a></li><li><a href="global.html#stopProp">stopProp</a></li><li><a href="global.html#switchToGame">switchToGame</a></li><li><a href="global.html#switchToStart">switchToStart</a></li><li><a href="global.html#unpauseTimer">unpauseTimer</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jun 16 2025 04:24:15 GMT+0200 (czas środkowoeuropejski letni)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

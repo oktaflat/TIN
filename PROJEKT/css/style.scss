@@ -1,0 +1,52 @@
+@use "sass:map";
+@import "basics";
+@import "startMenu";
+@import "ranking";
+@import "game";
+
+// Basic styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  color: color(light);
+}
+h2 {
+  font-size: 28px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: spacing(m);
+}
+body {
+  background: color(dark);
+}
+button {
+  font-size: 24px;
+  font-weight: bold;
+  font-style: italic;
+  background: color(accent);
+  border: 0;
+  border-radius: $radius;
+  padding: spacing(s);
+  color: color(dark);
+  cursor: pointer;
+}
+button:hover {
+  background: color(lighter-accent);
+  transition: background $transition;
+}
+.page {
+  min-height: 100vh;
+  height: fit-content;
+  width: 100vw;
+  @include flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+#main-container {
+  position: relative;
+  animation: fadeIn $long-transition;
+  @include containerStyle;
+}

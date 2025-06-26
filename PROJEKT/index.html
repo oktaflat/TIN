@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page">
+      <div id="main-container"></div>
+
+      <div id="ranking-container">
+        <h2 id="ranking-heading">RANKING</h2>
+
+        <div id="ranking-nav">
+          <button class="ranking-button" id="ranking-easy">EASY</button>
+          <button class="ranking-button" id="ranking-medium">MEDIUM</button>
+          <button class="ranking-button" id="ranking-hard">HARD</button>
+        </div>
+
+        <table>
+          <caption id="ranking-caption"></caption>
+          <thead>
+            <tr>
+              <th>PLACEMENT</th>
+              <th>TIME</th>
+            </tr>
+          </thead>
+          <tbody id="ranking-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

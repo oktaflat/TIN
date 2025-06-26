@@ -1,0 +1,73 @@
+@use "sass:map";
+
+// Variables and maps
+$colors: (
+  primary: #26272c,
+  lighter-primary: #383b42,
+  light: #ebe9e9,
+  dark: #1c1d21,
+  accent: #ec7a1c,
+  lighter-accent: #ee8f2f,
+);
+$spacings: (
+  s: 0.5rem,
+  m: 1rem,
+  l: 2rem,
+);
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+);
+$radius: 4px;
+$long-transition: 1s;
+$transition: 0.3s;
+
+// Functions
+@function color($key) {
+  @return map.get($colors, $key);
+}
+@function spacing($key) {
+  @return map.get($spacings, $key);
+}
+
+// Mixins
+@mixin flex($direction: column, $align-items: center) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: $align-items;
+  flex-wrap: wrap;
+}
+@mixin responsive($breakpoint) {
+  @media (max-width: map.get($breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+@mixin containerStyle() {
+  background: color(primary);
+  height: fit-content;
+  width: fit-content;
+  min-width: 500px;
+  padding: 20px;
+  border-radius: $radius;
+  box-shadow: 6px 2px color(accent);
+  @include flex;
+}
+
+// Animations
+@keyframes backgroundText {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-25%);
+  }
+}
+@keyframes fadeIn {
+  from {
+    transform: translateX(2%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}

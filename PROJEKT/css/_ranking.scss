@@ -1,0 +1,71 @@
+@import "basics";
+
+// Ranking
+#ranking-container {
+  @include containerStyle;
+  animation: fadeIn $long-transition 0.1s;
+  margin-top: spacing(l);
+
+  #ranking-heading {
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: spacing(m);
+  }
+
+  #ranking-nav {
+    border-top: 1px dashed color(accent);
+    padding: spacing(m);
+
+    .ranking-button {
+      background: none;
+      color: color(accent);
+      border: 1px solid color(accent);
+      width: 120px;
+    }
+
+    .ranking-button:hover {
+      color: color(lighter-accent);
+      transition: color $transition;
+    }
+
+    .ranking-button:active {
+      border-color: color(light);
+      color: color(light);
+    }
+  }
+
+  table {
+    width: 80%;
+    position: relative;
+    border-collapse: collapse;
+
+    caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      font-size: 40px;
+      font-style: italic;
+      color: rgba(color(light), 0.2);
+    }
+
+    th,
+    td {
+      padding: spacing(m);
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      text-align: right;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      text-align: left;
+    }
+
+    th {
+      border-bottom: 1px solid color(accent);
+    }
+  }
+}
