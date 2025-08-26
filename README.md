@@ -1,6 +1,6 @@
 ##### < LAB01 - LAB03 >
 A small collection of projects I've done during the course with any "real" CSS work.  
-I've also done some JavaScript code snippets, not showcased here (yet), which included basic FP and OOP stuff.
+I've also done some JavaScript code snippets, not showcased here (yet), which included basic FP and OOP stuff. That was most of the course work.
 
 ##### < PROJECT >
 Final project for the course. Very simple (and messily written...) minesweeper game.  
